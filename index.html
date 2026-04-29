@@ -431,8 +431,15 @@
     let deferredPrompt = null;
 
     function abrirEscala() {
+  const novaJanela = window.open(LINK_ESCALA, "_blank", "noopener,noreferrer");
+
+  if (!novaJanela) {
+    showToast("O navegador bloqueou a abertura automática. Toque novamente ou use o botão copiar link.");
+    setTimeout(() => {
       window.location.href = LINK_ESCALA;
-    }
+    }, 1200);
+  }
+}
 
     function showToast(message) {
       const toast = document.getElementById("toast");
