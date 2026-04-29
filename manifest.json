@@ -1,8 +1,8 @@
 {
   "name": "Escala Técnicos UPA 24h",
   "short_name": "Escala UPA",
-  "start_url": ".",
-  "scope": ".",
+  "start_url": "./index.html?v=2",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#07111f",
   "theme_color": "#3478f6",
