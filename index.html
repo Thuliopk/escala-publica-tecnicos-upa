@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <title>Escala Técnicos UPA 24H</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="background-color" content="#07111f" />
+
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Escala UPA" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="icon" href="icon-512.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icon-512.png" />
+
+  <style>
+    :root {
+      --bg-0: #030712;
+      --bg-1: #07111f;
+      --bg-2: #0d1b2f;
+      --stroke: rgba(255, 255, 255, 0.13);
+      --text: #f4f8ff;
+      --muted: #9fb2d2;
+      --muted-2: #7185a6;
+      --primary: #4f8cff;
+      --primary-2: #6fa8ff;
+      --success: #22c55e;
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
+      --radius-xl: 30px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      width: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg-0);
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(79, 140, 255, 0.26), transparent 34%),
+        radial-gradient(circle at 100% 88%, rgba(34, 197, 94, 0.10), transparent 28%),
+        linear-gradient(160deg, #030712 0%, #07111f 42%, #0d1b2f 100%);
+    }
+
+    .page {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--stroke);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.045)),
+        rgba(7, 17, 31, 0.86);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      padding: 22px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      top: -120px;
+      right: -120px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(79, 140, 255, 0.28), transparent 68%);
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      bottom: -90px;
+      left: -90px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .app-icon {
+      width: 68px;
+      height: 68px;
+      min-width: 68px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #07111f;
+      border: 1px solid rgba(111, 168, 255, 0.25);
+      box-shadow:
+        0 16px 34px rgba(37, 99, 235, 0.32),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+    }
+
+    .app-icon img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .brand {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(79, 140, 255, 0.13);
+      border: 1px solid rgba(111, 168, 255, 0.18);
+      color: #dce9ff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 7vw, 38px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .blue {
+      color: var(--primary-2);
+    }
+
+    .subtitle {
+      margin: 14px 0 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .status-card {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .mini {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .mini-ico {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: rgba(79, 140, 255, 0.16);
+      font-size: 15px;
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 13px;
+      color: #ffffff;
+      margin-bottom: 2px;
+    }
+
+    .mini span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn:active {
+      transform: scale(0.985);
+    }
+
+    .btn-primary {
+      color: #ffffff;
+      background: linear-gradient(135deg, #2563eb 0%, #4f8cff 55%, #6fa8ff 100%);
+      box-shadow:
+        0 18px 34px rgba(37, 99, 235, 0.38),
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+    }
+
+    .btn-secondary {
+      color: #dce9ff;
+      background: rgba(255, 255, 255, 0.075);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .btn-install {
+      display: none;
+      color: #052e16;
+      background: linear-gradient(135deg, #86efac, #22c55e);
+      box-shadow: 0 16px 30px rgba(34, 197, 94, 0.24);
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .online {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      color: #b7c8e5;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.8);
+    }
+
+    .toast {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: max(16px, env(safe-area-inset-bottom));
+      z-index: 20;
+      max-width: 480px;
+      margin: 0 auto;
+      display: none;
+      padding: 13px 14px;
+      border-radius: 16px;
+      background: rgba(7, 17, 31, 0.94);
+      border: 1px solid rgba(111, 168, 255, 0.24);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.38);
+      color: #dce9ff;
+      font-size: 13px;
+      line-height: 1.45;
+      backdrop-filter: blur(14px);
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    @media (max-width: 380px) {
+      .card {
+        padding: 18px;
+        border-radius: 26px;
+      }
+
+      .top {
+        gap: 12px;
+      }
+
+      .app-icon {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        border-radius: 20px;
+      }
+
+      .btn {
+        min-height: 56px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="shell">
+      <div class="card">
+        <div class="content">
+
+          <div class="top">
+            <div class="app-icon">
+              <img src="icon-192.png" alt="Ícone Escala Técnicos UPA 24H">
+            </div>
+
+            <div class="brand">
+              <div class="eyebrow">UPA 24H · Técnicos</div>
+              <h1>Escala<br><span class="blue">do Mês</span></h1>
+            </div>
+          </div>
+
+          <p class="subtitle">
+            Acesse rapidamente a escala mensal dos técnicos de enfermagem,
+            visualize os plantões e consulte a organização do mês pelo celular.
+          </p>
+
+          <div class="status-card">
+            <div class="mini">
+              <div class="mini-ico">📲</div>
+              <div>
+                <strong>App instalável</strong>
+                <span>Use como aplicativo no Android ou adicione à tela inicial no iPhone.</span>
+              </div>
+            </div>
+
+            <div class="mini">
+              <div class="mini-ico">📅</div>
+              <div>
+                <strong>Escala mensal</strong>
+                <span>Botão direto para abrir a visualização oficial da escala dos técnicos.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" onclick="abrirEscala()">
+              📅 Abrir escala
+            </button>
+
+            <button class="btn btn-install" id="btnInstall">
+              📲 Instalar aplicativo
+            </button>
+
+            <button class="btn btn-secondary" id="btnCopy">
+              🔗 Copiar link da escala
+            </button>
+          </div>
+
+          <div class="footer">
+            <span class="online"><span class="dot"></span> Online</span>
+            <span>Escala Técnicos UPA 24H</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const APP_URL = "https://thuliopk.github.io/escala-publica-tecnicos-upa/";
+    const LINK_ESCALA = "https://script.google.com/macros/s/AKfycbzwyGVUCa36OENnb6CMKzoCXkMVh3lJrhObXgcMg6O--uCidKHiot1OV-lK1P4LkEVr6g/exec?app=escala";
+
+    let deferredPrompt = null;
+
+    function abrirEscala() {
+      window.location.href = LINK_ESCALA;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3200);
+    }
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+
+      const btnInstall = document.getElementById("btnInstall");
+      if (btnInstall) {
+        btnInstall.style.display = "flex";
+      }
+    });
+
+    document.getElementById("btnInstall").addEventListener("click", async () => {
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+      if (isIOS) {
+        showToast("No iPhone, abra pelo Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.");
+        return;
+      }
+
+      if (!deferredPrompt) {
+        showToast("No Android, toque nos três pontinhos do Chrome e escolha Instalar app ou Adicionar à tela inicial.");
+        return;
+      }
+
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+
+      deferredPrompt = null;
+      document.getElementById("btnInstall").style.display = "none";
+    });
+
+    document.getElementById("btnCopy").addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(APP_URL);
+        showToast("Link do app copiado.");
+      } catch (error) {
+        showToast("Não foi possível copiar automaticamente. Copie o link pela barra do navegador.");
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
